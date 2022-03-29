@@ -55,7 +55,7 @@ function draw() {
     if (draw_targets) {
         // The user is interacting with the 6x3 target grid
         //FIXME background
-        background(color(253, 255, 162)); // sets background to black
+        background(color(255, 255, 0)); // sets background to black
 
         // Print trial count at the top left-corner of the canvas
         fill(color(255, 255, 255));
@@ -72,7 +72,7 @@ function draw() {
         let x = map(mouseX, inputArea.x, inputArea.x + inputArea.w, 0, width)
         let y = map(mouseY, inputArea.y, inputArea.y + inputArea.h, 0, height)
 
-        fill(color(255, 255, 255));
+        fill(color(0, 0, 0));
         circle(x, y, 0.5 * PPCM);
     }
 }
@@ -140,6 +140,8 @@ function mousePressed() {
         // Get the location and size of the target the user should be trying to select
         let target = getTargetBounds(trials[current_trial]);
 
+
+
         // Check to see if the virtual cursor is inside the target bounds,
         // increasing either the 'hits' or 'misses' counters
 
@@ -175,27 +177,38 @@ function drawTarget(i) {
     // Get the location and size for target (i)
     let target = getTargetBounds(i);
 
+
     // Check whether this target is the target the user should be trying to select
     if (trials[current_trial] === i) {
         //FIXME target
         // Highlights the target the user should be trying to select
         // with a white border
-        fill(color(255, 0, 0))
+        fill(color(0, 0, 255))
         stroke(color(220, 220, 220));
         strokeWeight(2);
         circle(target.x, target.y, target.w);
+
+
 
         // Remember you are allowed to access targets (i-1) and (i+1)
         // if this is the target the user should be trying to select
         //
     }
+
     // Does not draw a border if this is not the target the user
     // should be trying to select
     else {
         // FIXME not the target
         noStroke();
         // Draws the target
-        fill(color(255, 255, 0));
+        fill(color(253, 255, 162));
+        circle(target.x, target.y, target.w);
+    }
+
+    if (trials[current_trial + 1] === i) {
+
+        stroke(color(255, 168, 0));
+        strokeWeight(10);
         circle(target.x, target.y, target.w);
     }
 }
