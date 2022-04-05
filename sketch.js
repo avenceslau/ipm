@@ -6,7 +6,7 @@
 // p5.js reference: https://p5js.org/reference/
 
 // Database (CHANGE THESE!)
-const GROUP_NUMBER = 0; // Add your group number here as an integer (e.g., 2, 3)
+const GROUP_NUMBER = 4; // Add your group number here as an integer (e.g., 2, 3)
 const BAKE_OFF_DAY = false; // Set to 'true' before sharing during the bake-off day
 
 // Target and grid properties (DO NOT CHANGE!)
@@ -55,7 +55,7 @@ function draw() {
     if (draw_targets) {
         // The user is interacting with the 6x3 target grid
         //FIXME background
-        background(color(255, 255, 0)); // sets background to black
+        background(color(0, 0, 0)); // sets background to black
 
         // Print trial count at the top left-corner of the canvas
         fill(color(255, 255, 255));
@@ -183,9 +183,10 @@ function drawTarget(i) {
         //FIXME target
         // Highlights the target the user should be trying to select
         // with a white border
-        fill(color(0, 0, 255))
-        stroke(color(220, 220, 220));
-        strokeWeight(2);
+        fill(color(255, 0, 0));
+        noStroke();
+        //stroke(color(255, 255, 0));
+        //strokeWeight(6);
         circle(target.x, target.y, target.w);
 
 
@@ -201,14 +202,14 @@ function drawTarget(i) {
         // FIXME not the target
         noStroke();
         // Draws the target
-        fill(color(253, 255, 162));
+        fill(color(0, 4, 74));
         circle(target.x, target.y, target.w);
     }
 
     if (trials[current_trial + 1] === i) {
 
-        stroke(color(255, 168, 0));
-        strokeWeight(10);
+        stroke(color(255, 255, 0));
+        strokeWeight(6);
         circle(target.x, target.y, target.w);
     }
 }
