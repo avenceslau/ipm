@@ -183,7 +183,7 @@ function drawTarget(i) {
         //FIXME target
         // Highlights the target the user should be trying to select
         // with a white border
-        fill(color(255, 0, 0));
+        fill(color(0, 255, 0));
         noStroke();
         //stroke(color(255, 255, 0));
         //strokeWeight(6);
@@ -208,7 +208,7 @@ function drawTarget(i) {
 
     if (trials[current_trial + 1] === i) {
 
-        stroke(color(255, 255, 0));
+        stroke(color(255, 0, 0));
         strokeWeight(6);
         circle(target.x, target.y, target.w);
     }
