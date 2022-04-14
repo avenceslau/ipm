@@ -60,11 +60,15 @@ function Fitts(x1, y1, x2, y2, radius) {
 
 //Plot line to next target and write text 2x when applicable
 function draw_aux() {
+    let prev_target = getTargetBounds(trials[current_trial - 1]);
     let curr_target = getTargetBounds(trials[current_trial]);
     let next_target = getTargetBounds(trials[current_trial + 1]);
+    let input_prev_target = new Target(map(prev_target.x, 0, width, inputArea.x, inputArea.x + inputArea.w),
+                                       map(prev_target.y, 0, height, inputArea.y, inputArea.y + inputArea.h),
+                                       map(prev_target.w, 0,0.5 * PPCM,0, 15));    
     let input_curr_target = new Target(map(curr_target.x, 0, width, inputArea.x, inputArea.x + inputArea.w),
-                                      map(curr_target.y, 0, height, inputArea.y, inputArea.y + inputArea.h),
-                                      map(curr_target.w, 0,0.5 * PPCM,0, 15));
+                                       map(curr_target.y, 0, height, inputArea.y, inputArea.y + inputArea.h),
+                                       map(curr_target.w, 0,0.5 * PPCM,0, 15));
     let input_next_target = new Target(map(next_target.x, 0, width, inputArea.x, inputArea.x + inputArea.w),
                                        map(next_target.y, 0, height, inputArea.y, inputArea.y + inputArea.h),
                                        map(next_target.w, 0,0.5 * PPCM,0, 15));                              
@@ -72,7 +76,10 @@ function draw_aux() {
 
     stroke(color(255, 0, 0));
     line(curr_target.x, curr_target.y, next_target.x, next_target.y);
+    strokeWeight(3);
     line(input_curr_target.x, input_curr_target.y, input_next_target.x, input_next_target.y);
+    stroke(color(0, 255, 0));
+    line(input_prev_target.x, input_prev_target.y, input_curr_target.x, input_curr_target.y);
 
     if(dist(curr_target.x, curr_target.y, next_target.x, next_target.y) === 0){
         noStroke();
