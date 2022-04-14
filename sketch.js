@@ -16,8 +16,8 @@ let TARGET_PADDING, MARGIN, LEFT_PADDING, TOP_PADDING;
 let continue_button;
 let inputArea = { x: 0, y: 0, h: 0, w: 0 } // Position and size of the user input area
 let bcgColor;
-let sound;
-let sound_play;
+//let sound;
+//let sound_play;
 
 // Metrics
 let testStartTime, testEndTime; // time between the start and end of one attempt (54 trials)
@@ -46,10 +46,10 @@ class Target {
 function setup() {
     createCanvas(700, 500); // window size in px before we go into fullScreen()
     frameRate(60); // frame rate (DO NOT CHANGE!)
-    sound_play = 0;
+    //sound_play = 0;
+    //sound = loadSound('click_it.mp3');
 
     bcgColor =  color(0, 0, 0);
-    sound = loadSound('click_it.mp3');
 
     randomizeTrials(); // randomize the trial order at the start of execution
 
@@ -105,7 +105,7 @@ function draw() {
         // The user is interacting with the 6x3 target grid
         background(bcgColor); // sets background to black
         
-        if(sound_play === 1) sound.play();
+        //if(sound_play === 1) sound.play();
 
 
         // Print trial count at the top left-corner of the canvas
@@ -192,7 +192,7 @@ function printAndSavePerformance() {
 function mousePressed() {
     // Only look for mouse releases during the actual test
     // (i.e., during target selections)
-    sound_play = 0;
+    //sound_play = 0;
     if (draw_targets) {
         // Get the location and size of the target the user should be trying to select
         let target = getTargetBounds(trials[current_trial]);
@@ -260,8 +260,8 @@ function drawTarget(i) {
     
             if (dist(target.x, target.y, virtual_x, virtual_y) < target.w / 2){ 
                 fill(255, 255, 255);  
-                if(sound_play === 1) sound_play = 2;
-                if(sound_play === 0) sound_play = 1;
+                //if(sound_play === 1) sound_play = 2;
+                //if(sound_play === 0) sound_play = 1;
             }
         } 
         //stroke(color(255, 255, 0));
