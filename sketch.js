@@ -50,6 +50,20 @@ function setup() {
     drawUserIDScreen(); // draws the user start-up screen (student ID and display size)
 }
 
+
+function Fitts(x1, y1, x2, y2, radius) {
+    a = x1 - x2;
+    b = y1 - y2;
+    dist = Math.sqrt(a * a + b * b);
+    return Math.log2((dist / radius) + 1);
+}
+
+//Plot line to next target
+function draw_lines() {
+    stroke(color(255, 0, 0));
+    line(getTargetBounds(trials[current_trial]).x, getTargetBounds(trials[current_trial]).y, getTargetBounds(trials[current_trial + 1]).x, getTargetBounds(trials[current_trial + 1]).y);
+}
+
 // Runs every frame and redraws the screen
 function draw() {
     if (draw_targets) {
@@ -64,14 +78,19 @@ function draw() {
 
         // Draw all 18 targets
         for (var i = 0; i < 18; i++) drawTarget(i);
-
+        draw_lines();
         // Draw the user input area
         drawInputArea()
 
         // Draw the virtual cursor
         let x = map(mouseX, inputArea.x, inputArea.x + inputArea.w, 0, width)
         let y = map(mouseY, inputArea.y, inputArea.y + inputArea.h, 0, height)
-
+        for (var i = 0; i < 18; i++) {
+            if (getTargetBounds(i).x - 1.5 * PPCM < x && x < getTargetBounds(i).x + 1.5 * PPCM && getTargetBounds(i).y - 1.5 * PPCM < y && y < getTargetBounds(i).y + 1.5 * PPCM) {
+                x = getTargetBounds(i).x;
+                y = getTargetBounds(i).y;
+            }
+        }
         fill(color(0, 0, 0));
         circle(x, y, 0.5 * PPCM);
     }
@@ -148,6 +167,13 @@ function mousePressed() {
         if (insideInputArea(mouseX, mouseY)) {
             let virtual_x = map(mouseX, inputArea.x, inputArea.x + inputArea.w, 0, width)
             let virtual_y = map(mouseY, inputArea.y, inputArea.y + inputArea.h, 0, height)
+            for (var i = 0; i < 18; i++) {
+                if (getTargetBounds(i).x - 1.5 * PPCM < virtual_x && virtual_x < getTargetBounds(i).x + 1.5 * PPCM && getTargetBounds(i).y - 1.5 * PPCM < virtual_y && virtual_y < getTargetBounds(i).y + 1.5 * PPCM) {
+                    virtual_x = getTargetBounds(i).x;
+                    virtual_y = getTargetBounds(i).y;
+                }
+            }
+
 
             if (dist(target.x, target.y, virtual_x, virtual_y) < target.w / 2) hits++;
             else misses++;
@@ -168,7 +194,7 @@ function mousePressed() {
                 continue_button.mouseReleased(continueTest);
                 continue_button.position(width / 2 - continue_button.size().width / 2, height / 2 - continue_button.size().height / 2);
             }
-        }
+        } else if (current_trial === 1) testStartTime = millis();
     }
 }
 
