@@ -68,7 +68,6 @@ function draw_lines() {
 function draw() {
     if (draw_targets) {
         // The user is interacting with the 6x3 target grid
-        //FIXME background
         background(color(0, 0, 0)); // sets background to black
 
         // Print trial count at the top left-corner of the canvas
@@ -159,8 +158,6 @@ function mousePressed() {
         // Get the location and size of the target the user should be trying to select
         let target = getTargetBounds(trials[current_trial]);
 
-
-
         // Check to see if the virtual cursor is inside the target bounds,
         // increasing either the 'hits' or 'misses' counters
 
@@ -203,7 +200,6 @@ function drawTarget(i) {
     // Get the location and size for target (i)
     let target = getTargetBounds(i);
 
-
     // Check whether this target is the target the user should be trying to select
     if (trials[current_trial] === i) {
         //FIXME target
@@ -213,9 +209,6 @@ function drawTarget(i) {
         noStroke();
         //stroke(color(255, 255, 0));
         //strokeWeight(6);
-        circle(target.x, target.y, target.w);
-
-
 
         // Remember you are allowed to access targets (i-1) and (i+1)
         // if this is the target the user should be trying to select
@@ -229,15 +222,18 @@ function drawTarget(i) {
         noStroke();
         // Draws the target
         fill(color(0, 4, 74));
-        circle(target.x, target.y, target.w);
     }
 
     if (trials[current_trial + 1] === i) {
 
         stroke(color(255, 0, 0));
         strokeWeight(6);
-        circle(target.x, target.y, target.w);
     }
+    let input_target = new Target(map(target.x, 0,width,inputArea.x, inputArea.x + inputArea.w),
+                                  map(target.y, 0,height,inputArea.y, inputArea.y + inputArea.h),
+                                  map(target.w, 0,0.5 * PPCM,0, 15));
+    circle(target.x, target.y, target.w);
+    circle(input_target.x ,input_target.y, input_target.w);
 }
 
 // Returns the location and size of a given target
