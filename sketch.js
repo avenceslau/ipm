@@ -232,24 +232,11 @@ function drawTarget(i) {
     if (trials[current_trial] === i) {
         //FIXME target
         // Highlights the target the user should be trying to select
-        // with a white border
+        // with green filling
         fill(color(0, 255, 0));
         noStroke();
         //stroke(color(255, 255, 0));
-        //strokeWeight(6);
-
-        if (insideInputArea(mouseX, mouseY)) {
-            let virtual_x = map(mouseX, inputArea.x, inputArea.x + inputArea.w, 0, width)
-            let virtual_y = map(mouseY, inputArea.y, inputArea.y + inputArea.h, 0, height)
-            for (var i = 0; i < 18; i++) {
-                if (getTargetBounds(i).x - 1.5 * PPCM < virtual_x && virtual_x < getTargetBounds(i).x + 1.5 * PPCM && getTargetBounds(i).y - 1.5 * PPCM < virtual_y && virtual_y < getTargetBounds(i).y + 1.5 * PPCM) {
-                    virtual_x = getTargetBounds(i).x;
-                    virtual_y = getTargetBounds(i).y;
-                }
-            }
-
-            if (dist(target.x, target.y, virtual_x, virtual_y) < target.w / 2) fill(color(255, 255, 255));;
-        }    
+        //strokeWeight(6);   
 
         // Remember you are allowed to access targets (i-1) and (i+1)
         // if this is the target the user should be trying to select
@@ -259,7 +246,6 @@ function drawTarget(i) {
     // Does not draw a border if this is not the target the user
     // should be trying to select
     else {
-        // FIXME not the target
         noStroke();
         // Draws the target
         fill(color(0, 4, 74));
@@ -270,11 +256,26 @@ function drawTarget(i) {
         stroke(color(255, 0, 0));
         strokeWeight(6);
     }
+
+    if (insideInputArea(mouseX, mouseY)) {
+        let virtual_x = map(mouseX, inputArea.x, inputArea.x + inputArea.w, 0, width)
+        let virtual_y = map(mouseY, inputArea.y, inputArea.y + inputArea.h, 0, height)
+        for (var i = 0; i < 18; i++) {
+            if (getTargetBounds(i).x - 1.5 * PPCM < virtual_x && virtual_x < getTargetBounds(i).x + 1.5 * PPCM && getTargetBounds(i).y - 1.5 * PPCM < virtual_y && virtual_y < getTargetBounds(i).y + 1.5 * PPCM) {
+                virtual_x = getTargetBounds(i).x;
+                virtual_y = getTargetBounds(i).y;
+            }
+        }
+
+        if (dist(target.x, target.y, virtual_x, virtual_y) < target.w / 2) fill(color(255, 255, 255));;
+    } 
+
     let input_target = new Target(map(target.x, 0,width,inputArea.x, inputArea.x + inputArea.w),
                                   map(target.y, 0,height,inputArea.y, inputArea.y + inputArea.h),
                                   map(target.w, 0,0.5 * PPCM,0, 15));
     circle(target.x, target.y, target.w);
-    circle(input_target.x ,input_target.y, input_target.w);
+    //circle(input_target.x ,input_target.y, input_target.w);
+    square(input_target.x - input_target.w/2,input_target.y - input_target.w/2, input_target.w, 8);
 }
 
 // Returns the location and size of a given target
