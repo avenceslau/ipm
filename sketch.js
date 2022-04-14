@@ -58,10 +58,31 @@ function Fitts(x1, y1, x2, y2, radius) {
     return Math.log2((dist / radius) + 1);
 }
 
-//Plot line to next target
-function draw_lines() {
+//Plot line to next target and write text 2x when applicable
+function draw_aux() {
+    let curr_target = getTargetBounds(trials[current_trial]);
+    let next_target = getTargetBounds(trials[current_trial + 1]);
+    let input_curr_target = new Target(map(curr_target.x, 0, width, inputArea.x, inputArea.x + inputArea.w),
+                                      map(curr_target.y, 0, height, inputArea.y, inputArea.y + inputArea.h),
+                                      map(curr_target.w, 0,0.5 * PPCM,0, 15));
+    let input_next_target = new Target(map(next_target.x, 0, width, inputArea.x, inputArea.x + inputArea.w),
+                                       map(next_target.y, 0, height, inputArea.y, inputArea.y + inputArea.h),
+                                       map(next_target.w, 0,0.5 * PPCM,0, 15));                              
+                                  
+
     stroke(color(255, 0, 0));
-    line(getTargetBounds(trials[current_trial]).x, getTargetBounds(trials[current_trial]).y, getTargetBounds(trials[current_trial + 1]).x, getTargetBounds(trials[current_trial + 1]).y);
+    line(curr_target.x, curr_target.y, next_target.x, next_target.y);
+    line(input_curr_target.x, input_curr_target.y, input_next_target.x, input_next_target.y);
+
+    if(dist(curr_target.x, curr_target.y, next_target.x, next_target.y) === 0){
+        noStroke();
+        textFont("Arial", 32);
+        fill(color(0, 0, 255));
+        textAlign(CENTER);
+        text("2x", curr_target.x, curr_target.y + 16);
+        textFont("Arial", 24);
+        text("2x", input_curr_target.x, input_curr_target.y + 8);
+    }    
 }
 
 // Runs every frame and redraws the screen
@@ -77,7 +98,7 @@ function draw() {
 
         // Draw all 18 targets
         for (var i = 0; i < 18; i++) drawTarget(i);
-        draw_lines();
+        draw_aux();
         // Draw the user input area
         drawInputArea()
 
@@ -209,6 +230,19 @@ function drawTarget(i) {
         noStroke();
         //stroke(color(255, 255, 0));
         //strokeWeight(6);
+
+        if (insideInputArea(mouseX, mouseY)) {
+            let virtual_x = map(mouseX, inputArea.x, inputArea.x + inputArea.w, 0, width)
+            let virtual_y = map(mouseY, inputArea.y, inputArea.y + inputArea.h, 0, height)
+            for (var i = 0; i < 18; i++) {
+                if (getTargetBounds(i).x - 1.5 * PPCM < virtual_x && virtual_x < getTargetBounds(i).x + 1.5 * PPCM && getTargetBounds(i).y - 1.5 * PPCM < virtual_y && virtual_y < getTargetBounds(i).y + 1.5 * PPCM) {
+                    virtual_x = getTargetBounds(i).x;
+                    virtual_y = getTargetBounds(i).y;
+                }
+            }
+
+            if (dist(target.x, target.y, virtual_x, virtual_y) < target.w / 2) fill(color(255, 255, 255));;
+        }    
 
         // Remember you are allowed to access targets (i-1) and (i+1)
         // if this is the target the user should be trying to select
