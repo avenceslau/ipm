@@ -15,6 +15,7 @@ let TARGET_SIZE;
 let TARGET_PADDING, MARGIN, LEFT_PADDING, TOP_PADDING;
 let continue_button;
 let inputArea = { x: 0, y: 0, h: 0, w: 0 } // Position and size of the user input area
+let bgColor;
 
 // Metrics
 let testStartTime, testEndTime; // time between the start and end of one attempt (54 trials)
@@ -43,6 +44,7 @@ class Target {
 function setup() {
     createCanvas(700, 500); // window size in px before we go into fullScreen()
     frameRate(60); // frame rate (DO NOT CHANGE!)
+    bgColor = color(0, 0, 0);
 
     randomizeTrials(); // randomize the trial order at the start of execution
 
@@ -96,7 +98,7 @@ function draw_aux() {
 function draw() {
     if (draw_targets) {
         // The user is interacting with the 6x3 target grid
-        background(color(0, 0, 0)); // sets background to black
+        background(bgColor); // sets background to black
 
         // Print trial count at the top left-corner of the canvas
         fill(color(255, 255, 255));
@@ -266,13 +268,15 @@ function drawTarget(i) {
                 virtual_y = getTargetBounds(i).y;
             }
         }
+        let target_to_hit = getTargetBounds(trials[current_trial]);
 
-        if (dist(target.x, target.y, virtual_x, virtual_y) < target.w / 2) fill(color(255, 255, 255));;
+        if (dist(target_to_hit.x, target_to_hit.y, virtual_x, virtual_y) < target.w / 2) bgColor = color(0, 0, 255);
+        else bgColor = color(0, 0, 0);
     } 
 
-    let input_target = new Target(map(target.x, 0,width,inputArea.x, inputArea.x + inputArea.w),
-                                  map(target.y, 0,height,inputArea.y, inputArea.y + inputArea.h),
-                                  map(target.w, 0,0.5 * PPCM,0, 15));
+    let input_target = new Target(map(target.x, 0, width,inputArea.x, inputArea.x + inputArea.w),
+                                  map(target.y, 0, height,inputArea.y, inputArea.y + inputArea.h),
+                                  map(target.w, 0, 0.5 * PPCM,0, 15));
     circle(target.x, target.y, target.w);
     //circle(input_target.x ,input_target.y, input_target.w);
     square(input_target.x - input_target.w/2,input_target.y - input_target.w/2, input_target.w, 8);
