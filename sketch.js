@@ -16,6 +16,8 @@ let TARGET_PADDING, MARGIN, LEFT_PADDING, TOP_PADDING;
 let continue_button;
 let inputArea = { x: 0, y: 0, h: 0, w: 0 } // Position and size of the user input area
 let bcgColor;
+let sound;
+let sound_play;
 
 // Metrics
 let testStartTime, testEndTime; // time between the start and end of one attempt (54 trials)
@@ -44,8 +46,10 @@ class Target {
 function setup() {
     createCanvas(700, 500); // window size in px before we go into fullScreen()
     frameRate(60); // frame rate (DO NOT CHANGE!)
+    sound_play = 0;
 
     bcgColor =  color(0, 0, 0);
+    sound = loadSound('click_it.mp3');
 
     randomizeTrials(); // randomize the trial order at the start of execution
 
@@ -100,6 +104,9 @@ function draw() {
     if (draw_targets) {
         // The user is interacting with the 6x3 target grid
         background(bcgColor); // sets background to black
+        
+        if(sound_play === 1) sound.play();
+
 
         // Print trial count at the top left-corner of the canvas
         fill(color(255, 255, 255));
@@ -185,6 +192,7 @@ function printAndSavePerformance() {
 function mousePressed() {
     // Only look for mouse releases during the actual test
     // (i.e., during target selections)
+    sound_play = 0;
     if (draw_targets) {
         // Get the location and size of the target the user should be trying to select
         let target = getTargetBounds(trials[current_trial]);
@@ -238,6 +246,24 @@ function drawTarget(i) {
         // with green filling
         fill(color(0, 255, 0));
         noStroke();
+
+        if (insideInputArea(mouseX, mouseY)) {
+            let virtual_x = map(mouseX, inputArea.x, inputArea.x + inputArea.w, 0, width)
+            let virtual_y = map(mouseY, inputArea.y, inputArea.y + inputArea.h, 0, height)
+            for (var i = 0; i < 18; i++) {
+                if (getTargetBounds(i).x - 1.5 * PPCM < virtual_x && virtual_x < getTargetBounds(i).x + 1.5 * PPCM && getTargetBounds(i).y - 1.5 * PPCM < virtual_y && virtual_y < getTargetBounds(i).y + 1.5 * PPCM) {
+                    virtual_x = getTargetBounds(i).x;
+                    virtual_y = getTargetBounds(i).y;
+                }
+            }
+            //let target_to_hit = getTargetBounds(trials[current_trial]);
+    
+            if (dist(target.x, target.y, virtual_x, virtual_y) < target.w / 2){ 
+                fill(255, 255, 255);  
+                if(sound_play === 1) sound_play = 2;
+                if(sound_play === 0) sound_play = 1;
+            }
+        } 
         //stroke(color(255, 255, 0));
         //strokeWeight(6);   
 
@@ -259,20 +285,6 @@ function drawTarget(i) {
         stroke(color(255, 0, 0));
         strokeWeight(6);
     }
-
-    if (insideInputArea(mouseX, mouseY)) {
-        let virtual_x = map(mouseX, inputArea.x, inputArea.x + inputArea.w, 0, width)
-        let virtual_y = map(mouseY, inputArea.y, inputArea.y + inputArea.h, 0, height)
-        for (var i = 0; i < 18; i++) {
-            if (getTargetBounds(i).x - 1.5 * PPCM < virtual_x && virtual_x < getTargetBounds(i).x + 1.5 * PPCM && getTargetBounds(i).y - 1.5 * PPCM < virtual_y && virtual_y < getTargetBounds(i).y + 1.5 * PPCM) {
-                virtual_x = getTargetBounds(i).x;
-                virtual_y = getTargetBounds(i).y;
-            }
-        }
-        let target_to_hit = getTargetBounds(trials[current_trial]);
-
-        if (dist(target_to_hit.x, target_to_hit.y, virtual_x, virtual_y) < target.w / 2) fill(255, 255, 255);
-    } 
 
     let input_target = new Target(map(target.x, 0, width,inputArea.x, inputArea.x + inputArea.w),
                                   map(target.y, 0, height,inputArea.y, inputArea.y + inputArea.h),
