@@ -15,7 +15,7 @@ let TARGET_SIZE;
 let TARGET_PADDING, MARGIN, LEFT_PADDING, TOP_PADDING;
 let continue_button;
 let inputArea = { x: 0, y: 0, h: 0, w: 0 } // Position and size of the user input area
-let bgColor;
+let bcgColor;
 
 // Metrics
 let testStartTime, testEndTime; // time between the start and end of one attempt (54 trials)
@@ -44,7 +44,8 @@ class Target {
 function setup() {
     createCanvas(700, 500); // window size in px before we go into fullScreen()
     frameRate(60); // frame rate (DO NOT CHANGE!)
-    bgColor = color(0, 0, 0);
+
+    bcgColor =  color(0, 0, 0);
 
     randomizeTrials(); // randomize the trial order at the start of execution
 
@@ -98,7 +99,7 @@ function draw_aux() {
 function draw() {
     if (draw_targets) {
         // The user is interacting with the 6x3 target grid
-        background(bgColor); // sets background to black
+        background(bcgColor); // sets background to black
 
         // Print trial count at the top left-corner of the canvas
         fill(color(255, 255, 255));
@@ -270,8 +271,7 @@ function drawTarget(i) {
         }
         let target_to_hit = getTargetBounds(trials[current_trial]);
 
-        if (dist(target_to_hit.x, target_to_hit.y, virtual_x, virtual_y) < target.w / 2) bgColor = color(0, 0, 255);
-        else bgColor = color(0, 0, 0);
+        if (dist(target_to_hit.x, target_to_hit.y, virtual_x, virtual_y) < target.w / 2) fill(255, 255, 255);
     } 
 
     let input_target = new Target(map(target.x, 0, width,inputArea.x, inputArea.x + inputArea.w),
