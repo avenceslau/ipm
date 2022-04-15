@@ -16,6 +16,8 @@ let TARGET_PADDING, MARGIN, LEFT_PADDING, TOP_PADDING;
 let continue_button;
 let inputArea = { x: 0, y: 0, h: 0, w: 0 } // Position and size of the user input area
 let bcgColor;
+let prev_click_x;
+let prev_click_y;
 //let sound;
 //let sound_play;
 
@@ -46,6 +48,9 @@ class Target {
 function setup() {
     createCanvas(700, 500); // window size in px before we go into fullScreen()
     frameRate(60); // frame rate (DO NOT CHANGE!)
+    let target = getTargetBounds(0);
+    prev_click_x = target.x;
+    prev_click_y = target.y;
     //sound_play = 0;
     //sound = loadSound('click_it.mp3');
 
@@ -59,10 +64,10 @@ function setup() {
 
 
 function Fitts(x1, y1, x2, y2, radius) {
-    a = x1 - x2;
-    b = y1 - y2;
-    dist = Math.sqrt(a * a + b * b);
-    return Math.log2((dist / radius) + 1);
+    let a = x1 - x2;
+    let b = y1 - y2;
+    let dist = Math.sqrt(a * a + b * b);
+    return Math.log2(1 + (dist / radius));
 }
 
 //Plot line to next target and write text 2x when applicable
@@ -177,6 +182,14 @@ function printAndSavePerformance() {
     text("Average time for each target (+ penalty): " + target_w_penalty + "s", width / 2, 220);
 
     // Print Fitts IDS (one per target, -1 if failed selection, optional)
+    for(var i = 0, col_y = 270; i < 27;  col_y += 27, i++){
+        if(fitts_IDs[i] == -1) text("Target " + (i+1) + ": MISSED", width * 1/3, col_y);
+        else text("Target " + (i+1) + ": " + fitts_IDs[i], width * 1/3, col_y);
+    }
+    for(var i = 27, col_y = 270; i < 54;  col_y += 27, i++){
+        if(fitts_IDs[i] == -1) text("Target " + (i+1) + ": MISSED", width * 2/3, col_y);
+        else text("Target " + (i+1) + ": " + fitts_IDs[i], width * 2/3, col_y);
+    }
     // 
 
     // Saves results (DO NOT CHANGE!)
@@ -223,16 +236,26 @@ function mousePressed() {
         if (insideInputArea(mouseX, mouseY)) {
             let virtual_x = map(mouseX, inputArea.x, inputArea.x + inputArea.w, 0, width)
             let virtual_y = map(mouseY, inputArea.y, inputArea.y + inputArea.h, 0, height)
+            let snap_x;
+            let snap_y;
             for (var i = 0; i < 18; i++) {
                 if (getTargetBounds(i).x - 1.5 * PPCM < virtual_x && virtual_x < getTargetBounds(i).x + 1.5 * PPCM && getTargetBounds(i).y - 1.5 * PPCM < virtual_y && virtual_y < getTargetBounds(i).y + 1.5 * PPCM) {
-                    virtual_x = getTargetBounds(i).x;
-                    virtual_y = getTargetBounds(i).y;
+                    snap_x = getTargetBounds(i).x;
+                    snap_y = getTargetBounds(i).y;
                 }
             }
 
-            if (dist(target.x, target.y, virtual_x, virtual_y) < target.w / 2) hits++;
-            else misses++;
-
+            if (dist(target.x, target.y, snap_x, snap_y) < target.w / 2) {
+                hits++;
+                let temp = Fitts(prev_click_x, prev_click_y, target.x, target.y, target.w);
+                fitts_IDs.push(temp.toFixed(3));
+            }    
+            else {
+                misses++;
+                fitts_IDs.push(-1);
+            }
+            prev_click_x = virtual_x;
+            prev_click_y = virtual_y;
             current_trial++; // Move on to the next trial/target
         }
 
