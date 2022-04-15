@@ -114,15 +114,15 @@ function draw() {
         textFont("Arial", 20);
         text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 25);
         text("MousePos: " + mouseX + ", " + mouseY, 50, 50);
-        
+
         textAlign(RIGHT);
         textFont("Arial", 32);
-        text("Espera! O tempo ainda não está a contar. Lê isto primeiro:", width, inputArea.y - 1.2 * inputArea.h);
+        text("Espera! O tempo ainda não está a contar. Lê isto primeiro:", width, inputArea.y - 1.15 * inputArea.h);
         textFont("Arial", 24);
-        text("Acerta no alvo a verde, quando o alvo ficar branco podes carregar que contará como hit.", width, inputArea.y - inputArea.h);
-        text("Quando aparecer o texto 2x dentro do alvo faz duplo clique - próximo é o mesmo.", width, inputArea.y - 0.85 * inputArea.h);
-        text("A área de input é esta, podes esquecer o que está à esquerda e apenas tentar acertar", width, inputArea.y - 0.70 * inputArea.h);
-        text("nos alvos olhando para aqui.",  width, inputArea.y - 0.55 * inputArea.h);
+        text("Acerta no alvo a verde, quando o alvo ficar branco podes carregar que contará como hit.", width, inputArea.y - 0.90 * inputArea.h);
+        text("Quando aparecer o texto 2x dentro do alvo faz duplo clique - o próximo alvo é o mesmo.", width, inputArea.y - 0.75 * inputArea.h);
+        text("A área de input é esta, podes esquecer o que está à esquerda e apenas tentar acertar", width, inputArea.y - 0.60 * inputArea.h);
+        text("nos alvos olhando para aqui.",  width, inputArea.y - 0.45 * inputArea.h);
         beginShape();
         vertex(inputArea.x + inputArea.w, inputArea.y);
         vertex(inputArea.x + (1-1/18) * inputArea.w, (1-1/10) * inputArea.y);
