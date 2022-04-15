@@ -111,17 +111,37 @@ function draw() {
         // Print trial count at the top left-corner of the canvas
         fill(color(255, 255, 255));
         textAlign(LEFT);
-        text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 20);
+        textFont("Arial", 20);
+        text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 25);
+        text("MousePos: " + mouseX + ", " + mouseY, 50, 50);
+
+        textAlign(RIGHT);
+        textFont("Arial", 42);
+        text("Espera! O tempo ainda não está a contar. Lê isto primeiro:", width, 200);
+        textFont("Arial", 28);
+        text("Acerta no alvo a verde, quando o alvo ficar branco podes carregar que contará como hit.", width, 270);
+        text("Quando aparecer o texto 2x dentro do alvo faz duplo clique - próximo é o mesmo.", width, 305);
+        text("A área de input é esta, podes esquecer o que está à esquerda e apenas tentar acertar", width, 340);
+        text("nos alvos olhando para aqui.",  width, 375);
+        beginShape();
+        vertex(inputArea.x + inputArea.w, inputArea.y);
+        vertex(inputArea.x + inputArea.w - 30, inputArea.y - 65);
+        vertex(inputArea.x + inputArea.w - 15, inputArea.y - 65);
+        vertex(inputArea.x + inputArea.w - 15, inputArea.y - 150);
+        vertex(inputArea.x + inputArea.w + 15, inputArea.y - 150);
+        vertex(inputArea.x + inputArea.w + 15, inputArea.y - 65);
+        vertex(inputArea.x + inputArea.w + 30, inputArea.y - 65);
+        endShape();
 
         // Draw all 18 targets
         for (var i = 0; i < 18; i++) drawTarget(i);
         draw_aux();
         // Draw the user input area
-        drawInputArea()
+        drawInputArea();
 
         // Draw the virtual cursor
-        let x = map(mouseX, inputArea.x, inputArea.x + inputArea.w, 0, width)
-        let y = map(mouseY, inputArea.y, inputArea.y + inputArea.h, 0, height)
+        let x = map(mouseX, inputArea.x, inputArea.x + inputArea.w, 0, width);
+        let y = map(mouseY, inputArea.y, inputArea.y + inputArea.h, 0, height);
         for (var i = 0; i < 18; i++) {
             if (getTargetBounds(i).x - 1.5 * PPCM < x && x < getTargetBounds(i).x + 1.5 * PPCM && getTargetBounds(i).y - 1.5 * PPCM < y && y < getTargetBounds(i).y + 1.5 * PPCM) {
                 x = getTargetBounds(i).x;
@@ -210,7 +230,6 @@ function mousePressed() {
                 }
             }
 
-
             if (dist(target.x, target.y, virtual_x, virtual_y) < target.w / 2) hits++;
             else misses++;
 
@@ -238,15 +257,19 @@ function mousePressed() {
 function drawTarget(i) {
     // Get the location and size for target (i)
     let target = getTargetBounds(i);
+    let input_target = new Target(map(target.x, 0, width,inputArea.x, inputArea.x + inputArea.w),
+                                  map(target.y, 0, height,inputArea.y, inputArea.y + inputArea.h),
+                                  map(target.w, 0, 0.5 * PPCM,0, 15));
 
     // Check whether this target is the target the user should be trying to select
     if (trials[current_trial] === i) {
         //FIXME target
         // Highlights the target the user should be trying to select
-        // with green filling
+        // with green filling 
         fill(color(0, 255, 0));
         noStroke();
-
+        circle(target.x, target.y, target.w);
+        square(input_target.x - input_target.w/2,input_target.y - input_target.w/2, input_target.w, 8); 
         if (insideInputArea(mouseX, mouseY)) {
             let virtual_x = map(mouseX, inputArea.x, inputArea.x + inputArea.w, 0, width)
             let virtual_y = map(mouseY, inputArea.y, inputArea.y + inputArea.h, 0, height)
@@ -256,14 +279,14 @@ function drawTarget(i) {
                     virtual_y = getTargetBounds(i).y;
                 }
             }
-            //let target_to_hit = getTargetBounds(trials[current_trial]);
     
-            if (dist(target.x, target.y, virtual_x, virtual_y) < target.w / 2){ 
-                fill(255, 255, 255);  
-                //if(sound_play === 1) sound_play = 2;
-                //if(sound_play === 0) sound_play = 1;
-            }
-        } 
+            if (dist(target.x, target.y, virtual_x, virtual_y) < target.w / 2){
+                fill(0, 255, 255);
+                let width = input_target.w + 12;
+                square(input_target.x - width/2,input_target.y - width/2, width, 8);
+                return;
+            }       
+        }
         //stroke(color(255, 255, 0));
         //strokeWeight(6);   
 
@@ -278,20 +301,36 @@ function drawTarget(i) {
         noStroke();
         // Draws the target
         fill(color(0, 4, 74));
+        circle(target.x, target.y, target.w);
+        fill(color(2, 4, 16));
+        square(input_target.x - input_target.w/2,input_target.y - input_target.w/2, input_target.w, 8);
     }
 
     if (trials[current_trial + 1] === i) {
-
         stroke(color(255, 0, 0));
         strokeWeight(6);
+        fill(color(0, 4, 74));
+        circle(target.x, target.y, target.w);
+        fill(color(2, 4, 16));
+        square(input_target.x - input_target.w/2,input_target.y - input_target.w/2, input_target.w, 8);
     }
+    /*
+    if (insideInputArea(mouseX, mouseY)) {
+        let virtual_x = map(mouseX, inputArea.x, inputArea.x + inputArea.w, 0, width)
+        let virtual_y = map(mouseY, inputArea.y, inputArea.y + inputArea.h, 0, height)
+        for (var i = 0; i < 18; i++) {
+            if (getTargetBounds(i).x - 1.5 * PPCM < virtual_x && virtual_x < getTargetBounds(i).x + 1.5 * PPCM && getTargetBounds(i).y - 1.5 * PPCM < virtual_y && virtual_y < getTargetBounds(i).y + 1.5 * PPCM) {
+                virtual_x = getTargetBounds(i).x;
+                virtual_y = getTargetBounds(i).y;
+            }
+        }
+        let target_to_hit = getTargetBounds(trials[current_trial]);
 
-    let input_target = new Target(map(target.x, 0, width,inputArea.x, inputArea.x + inputArea.w),
-                                  map(target.y, 0, height,inputArea.y, inputArea.y + inputArea.h),
-                                  map(target.w, 0, 0.5 * PPCM,0, 15));
-    circle(target.x, target.y, target.w);
-    //circle(input_target.x ,input_target.y, input_target.w);
-    square(input_target.x - input_target.w/2,input_target.y - input_target.w/2, input_target.w, 8);
+        if (dist(target.x, target.y, virtual_x, virtual_y) < target.w / 2)
+            fill(0, 4, 54);
+        square(input_target.x - input_target.w/2,input_target.y - input_target.w/2, input_target.w, 8);
+    }
+    */
 }
 
 // Returns the location and size of a given target
