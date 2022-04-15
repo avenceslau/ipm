@@ -114,23 +114,23 @@ function draw() {
         textFont("Arial", 20);
         text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 25);
         text("MousePos: " + mouseX + ", " + mouseY, 50, 50);
-
+        
         textAlign(RIGHT);
-        textFont("Arial", 42);
-        text("Espera! O tempo ainda não está a contar. Lê isto primeiro:", width, 200);
-        textFont("Arial", 28);
-        text("Acerta no alvo a verde, quando o alvo ficar branco podes carregar que contará como hit.", width, 270);
-        text("Quando aparecer o texto 2x dentro do alvo faz duplo clique - próximo é o mesmo.", width, 305);
-        text("A área de input é esta, podes esquecer o que está à esquerda e apenas tentar acertar", width, 340);
-        text("nos alvos olhando para aqui.",  width, 375);
+        textFont("Arial", 32);
+        text("Espera! O tempo ainda não está a contar. Lê isto primeiro:", width, inputArea.y - 1.2 * inputArea.h);
+        textFont("Arial", 24);
+        text("Acerta no alvo a verde, quando o alvo ficar branco podes carregar que contará como hit.", width, inputArea.y - inputArea.h);
+        text("Quando aparecer o texto 2x dentro do alvo faz duplo clique - próximo é o mesmo.", width, inputArea.y - 0.85 * inputArea.h);
+        text("A área de input é esta, podes esquecer o que está à esquerda e apenas tentar acertar", width, inputArea.y - 0.70 * inputArea.h);
+        text("nos alvos olhando para aqui.",  width, inputArea.y - 0.55 * inputArea.h);
         beginShape();
         vertex(inputArea.x + inputArea.w, inputArea.y);
-        vertex(inputArea.x + inputArea.w - 30, inputArea.y - 65);
-        vertex(inputArea.x + inputArea.w - 15, inputArea.y - 65);
-        vertex(inputArea.x + inputArea.w - 15, inputArea.y - 150);
-        vertex(inputArea.x + inputArea.w + 15, inputArea.y - 150);
-        vertex(inputArea.x + inputArea.w + 15, inputArea.y - 65);
-        vertex(inputArea.x + inputArea.w + 30, inputArea.y - 65);
+        vertex(inputArea.x + (1-1/18) * inputArea.w, (1-1/10) * inputArea.y);
+        vertex(inputArea.x + (1-1/36) * inputArea.w, (1-1/10) * inputArea.y);
+        vertex(inputArea.x + (1-1/36) * inputArea.w, (1-1/4) * inputArea.y);
+        vertex(inputArea.x + (1+1/36) * inputArea.w, (1-1/4) * inputArea.y);
+        vertex(inputArea.x + (1+1/36) * inputArea.w, (1-1/10) * inputArea.y);
+        vertex(inputArea.x + (1+1/18) * inputArea.w, (1-1/10) * inputArea.y);
         endShape();
 
         // Draw all 18 targets
